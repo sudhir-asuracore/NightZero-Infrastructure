@@ -61,6 +61,11 @@ echo "🔐 5/7 Setting up Secret Manager secret containers..."
 PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")
 COMPUTE_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 
+# Grant Firestore access
+gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
+  --member="serviceAccount:${COMPUTE_SA}" \
+  --role="roles/datastore.user" >/dev/null
+
 for secret_id in nightzero-gemini-api-key nightzero-github-token nightzero-git-clone-token nightzero-webhook-secret; do
   if ! gcloud secrets describe "${secret_id}" --project="${PROJECT_ID}" >/dev/null 2>&1; then
     gcloud secrets create "${secret_id}" --replication-policy="automatic" --project="${PROJECT_ID}"
