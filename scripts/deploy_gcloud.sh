@@ -114,3 +114,6 @@ echo "   Agent API URL:    ${agent_url}"
 echo "   Control Panel:    https://${FIREBASE_HOSTING_SITE_ID}.web.app"
 echo "   Cloud Logging Webhook: ${agent_url}/api/v1/webhooks/gcp-logging"
 echo "============================================================"
+
+# Set up the optional E2E infrastructure if requested (or just run it silently)
+"${script_dir}/setup_test_project_e2e.sh"
