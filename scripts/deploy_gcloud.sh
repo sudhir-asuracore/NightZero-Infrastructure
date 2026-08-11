@@ -58,11 +58,18 @@ gcloud builds submit "${agent_dir}" \
 
 # 5. Create Secret Manager Secret Containers (if not already existing)
 echo "🔐 5/7 Setting up Secret Manager secret containers..."
+PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")
+COMPUTE_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+
 for secret_id in nightzero-gemini-api-key nightzero-github-token nightzero-git-clone-token nightzero-webhook-secret; do
   if ! gcloud secrets describe "${secret_id}" --project="${PROJECT_ID}" >/dev/null 2>&1; then
     gcloud secrets create "${secret_id}" --replication-policy="automatic" --project="${PROJECT_ID}"
     echo "  Created container: ${secret_id} (Add secret version via: gcloud secrets versions add ${secret_id} --data-file=...)"
   fi
+  gcloud secrets add-iam-policy-binding "${secret_id}" \
+    --member="serviceAccount:${COMPUTE_SA}" \
+    --role="roles/secretmanager.secretAccessor" \
+    --project="${PROJECT_ID}" >/dev/null
 done
 
 # 6. Deploy NightZero-Agent to Cloud Run
