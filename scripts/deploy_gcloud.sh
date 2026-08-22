@@ -7,7 +7,7 @@ set -euo pipefail
 : "${PROJECT_ID:?Set PROJECT_ID to the Google Cloud project ID (e.g., export PROJECT_ID=my-gcp-project).}"
 : "${FIREBASE_HOSTING_SITE_ID:=${PROJECT_ID}}"
 : "${REGION:=us-central1}"
-: "${NIGHTZERO_REVIEWER_ALLOWLIST:=nightzero-judges@asuracore.com}"
+: "${NIGHTZERO_REVIEWER_ALLOWLIST:=nightzero-judges@asuracore.com,sidigrid@gmail.com}"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 infra_dir="$(cd "${script_dir}/.." && pwd)"
